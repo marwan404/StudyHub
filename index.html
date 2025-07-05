@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Brain emoji favicon -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50%25' y='50%25' style='dominant-baseline:central;text-anchor:middle;font-size:80px;'%3E%F0%9F%A7%A0%3C/text%3E%3C/svg%3E" type="image/svg+xml">
+    <link rel="stylesheet" href="style.css">
+    <title>Study Hub</title>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📚 Study Hub</h1>
+      <p>Your centralized learning dashboard</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-number" id="total-sites">0</div>
+        <div class="stat-label">Total Sites</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="visits-today">0</div>
+        <div class="stat-label">Visits Today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="study-time-today">0m</div>
+        <div class="stat-label">Study Time Today</div>
+      </div>
+    </div>
+
+    <!-- Main Navigation for sections -->
+    <div class="main-nav">
+      <button id="show-links-btn" class="active">My Resources</button>
+      <button id="show-tools-btn">Tools & Progress</button>
+    </div>
+
+    <!-- Links Section -->
+    <div id="links-section" class="content-section active">
+      <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Search your study resources...">
+      </div>
+      <div class="site-grid" id="site-grid"></div>
+    </div>
+
+    <!-- Tools Section -->
+    <div id="tools-section" class="content-section">
+      <!-- Streaks Section -->
+      <div class="section-group streaks-group">
+        <h3>Streaks</h3>
+        <div class="stats" style="margin-bottom: 0; justify-content: space-around;">
+          <div class="stat-card" style="padding: 0.75rem 1rem;">
+            <div class="stat-number" id="current-streak">0</div>
+            <div class="stat-label">Current Streak</div>
+          </div>
+          <div class="stat-card" style="padding: 0.75rem 1rem;">
+            <div class="stat-number" id="longest-streak">0</div>
+            <div class="stat-label">Longest Streak</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pomodoro Timer Section -->
+      <div class="pomodoro-section">
+        <h3 id="pomodoro-status">Work Time!</h3>
+        <button class="pomodoro-settings-toggle" id="pomodoro-settings-toggle" aria-label="Toggle Pomodoro settings">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+          </svg>
+        </button>
+        <div class="timer-display" id="timer-display">25:00</div>
+        <div class="timer-controls">
+          <button id="start-timer-btn">Start</button>
+          <button id="pause-timer-btn">Pause</button>
+          <button id="reset-timer-btn">Reset</button>
+        </div>
+        <div class="pomodoro-settings-panel" id="pomodoro-settings-panel">
+          <div class="pomodoro-settings-inputs">
+            <div class="form-group">
+              <label for="work-duration-input">Work Time (min)</label>
+              <input type="number" id="work-duration-input" min="1" value="25">
+            </div>
+            <div class="form-group">
+              <label for="short-break-duration-input">Short Break (min)</label>
+              <input type="number" id="short-break-duration-input" min="1" value="5">
+            </div>
+            <div class="form-group">
+              <label for="long-break-duration-input">Long Break (min)</label>
+              <input type="number" id="long-break-duration-input" min="1" value="15">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <button class="add-btn" id="add-btn" aria-label="Add new study resource">+</button>
+
+  <!-- Burger Menu Toggle -->
+  <div class="burger-menu-toggle" id="burger-menu-toggle" aria-label="Open settings menu" role="button" tabindex="0">
+    <span class="burger-line"></span>
+    <span class="burger-line"></span>
+    <span class="burger-line"></span>
+  </div>
+
+  <!-- Side Menu -->
+  <div class="side-menu" id="side-menu">
+    <h3>Settings</h3>
+
+    <div class="section-group theme-toggle-group">
+      <label for="theme-toggle">Dark Mode</label>
+      <label class="theme-toggle-switch">
+        <input type="checkbox" id="theme-toggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="section-group color-changer-group">
+      <label>Accent Color</label>
+      <div class="color-swatches" id="color-swatches">
+        <div class="color-swatch" data-color="indigo" title="Indigo"></div>
+        <div class="color-swatch" data-color="blue" title="Blue"></div>
+        <div class="color-swatch" data-color="green" title="Green"></div>
+        <div class="color-swatch" data-color="orange" title="Orange"></div>
+        <div class="color-swatch" data-color="purple" title="Purple"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Add/Edit Site -->
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-content">
+      <h2 id="modal-title">Add New Study Resource</h2>
+      <form id="add-edit-site-form">
+        <input type="hidden" id="site-id">
+        <div class="form-group">
+          <label for="site-name">Site Name</label>
+          <input type="text" id="site-name" placeholder="e.g., Khan Academy" required>
+        </div>
+        <div class="form-group">
+          <label for="site-url">URL</label>
+          <input type="url" id="site-url" placeholder="https://example.com" required>
+          <div class="loading-spinner" id="url-spinner"></div>
+        </div>
+        <div class="form-group">
+          <label for="site-description">Description</label>
+          <textarea id="site-description" placeholder="What's this site for?"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="tag-input">Tags (Type and press Enter)</label>
+          <div class="tag-input-container" id="tag-input-container">
+            <input type="text" id="tag-input" placeholder="math, physics, practice">
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancel-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="save-resource-btn">Add Resource</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Custom Message Box for Alerts/Confirmations -->
+  <div class="message-box-overlay" id="message-box-overlay">
+    <div class="message-box">
+      <h3 id="message-box-title"></h3>
+      <p id="message-box-text"></p>
+      <div class="message-box-actions" id="message-box-actions">
+        <!-- Buttons will be injected here -->
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
