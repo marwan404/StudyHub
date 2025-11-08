@@ -251,6 +251,11 @@ body::before {
     transform: translateY(0); /* Ensure no initial transform */
     opacity: 1; /* Ensure no initial opacity */
     animation: fadeIn 0.5s ease-out; /* Fade in animation */
+    cursor: grab;
+}
+.site-card:dragging {
+    opacity: 0.7;
+    cursor: grabbing;
 }
 /* Keyframe for fade in animation */
 @keyframes fadeIn {
@@ -970,4 +975,5 @@ input:checked + .slider:before {
     .timer-display {
         font-size: 3rem; /* Smaller timer display */
     }
+
 }
